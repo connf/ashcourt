@@ -79,6 +79,12 @@ class FloatRatesRepository
     {
         $this->collectData();
 
-        return response()->json($this->data->where("targetCurrency", strtoupper($symbol)));
+        $rate = $this->data->where("targetCurrency", strtoupper($symbol));
+        // Collections are numbered in order
+        // But we don't know which array key offset we will be getting as this varies based on $symbol
+        // So grab the values() and use the known offset - always 0 after grabbing the values
+        $rate = $rate->values()[0];
+
+        return response()->json($rate);
     }
 }
